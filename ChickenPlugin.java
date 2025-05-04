@@ -9,6 +9,8 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginInstantiationException;
 import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.pluginscheduler.api.SchedulablePlugin;
+import net.runelite.client.plugins.microbot.pluginscheduler.condition.logical.LogicalCondition;
 import net.runelite.client.plugins.microbot.pluginscheduler.event.PluginScheduleEntrySoftStopEvent;
 import net.runelite.client.ui.overlay.OverlayManager;
 
@@ -19,11 +21,10 @@ import java.awt.*;
         name = PluginDescriptor.Default + "ChickenExample",
         description = "Microbot ChickenExample plugin",
         tags = {"example", "microbot", "chicken"},
-        enabledByDefault = false,
-        canBeScheduled = true
+        enabledByDefault = false
 )
 @Slf4j
-public class ChickenPlugin extends Plugin{
+public class ChickenPlugin extends Plugin implements SchedulablePlugin {
     @Inject
     private ChickenConfig config;
     @Provides
@@ -46,6 +47,11 @@ public class ChickenPlugin extends Plugin{
             overlayManager.add(chickenOverlay);
         }
         chickenScript.run(config);
+    }
+    
+    @Override
+    public LogicalCondition getStopCondition() {
+        return null;
     }
 
     @Subscribe
