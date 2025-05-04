@@ -54,18 +54,21 @@ public class ChickenPlugin extends Plugin implements SchedulablePlugin {
         return null;
     }
 
+    @Override
     @Subscribe
     public void onPluginScheduleEntrySoftStopEvent(PluginScheduleEntrySoftStopEvent event) {
-        if (event.getPlugin() == this)
-            // Use the plugin manager
+
+        if (event.getPlugin() == this) {                      
+            // Schedule the stop operation on the client thread
             Microbot.getClientThread().invokeLater(() -> {
-                Microbot.getPluginManager().setPluginEnabled(this, false);
-                try {
+                try {                    
+                    Microbot.getPluginManager().setPluginEnabled(this, false);
                     Microbot.getPluginManager().stopPlugin(this);
-                } catch (PluginInstantiationException e) {
-                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    log.error("Error stopping plugin", e);
                 }
             });
+        }
     }
 
     protected void shutDown() {
